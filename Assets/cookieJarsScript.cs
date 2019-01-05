@@ -111,6 +111,9 @@ public class cookieJarsScript : MonoBehaviour {
 
             if (correctBtns[shownJar])
             {
+                lastLastEaten = lastEaten;
+                lastEaten = cookies[shownJar];
+
                 DebugMsg("You ate a " + debugCookies[cookies[shownJar]] + " cookie. That was right!");
                 cookieAmounts[shownJar]--;
                 hunger = 0;
@@ -151,6 +154,8 @@ public class cookieJarsScript : MonoBehaviour {
                     leds[2].material = lit;
                     leds[3].material = lit;
                     leds[4].material = lit;
+
+                    solved = true;
                 }
             }
 

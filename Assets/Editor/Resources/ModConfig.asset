@@ -13,7 +13,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: cookieJars
   title: Cookie Jars
-  description: '...'
+  description: "The cookies in this module are practically identical to real cookies,
+    but if you dunk these ones in milk, you\u2019ll explode.\nThis manual was originally
+    written by the winner of a short manual-writing competition held in the KTaNE
+    Discord (which was me, by the way ;D).\n\nManuals:\nHTML: Coming soon\u2122.\nPDF:
+    Coming soon\u2122."
   version: 
   outputFolder: build
-  previewImage: {fileID: 0}
+  previewImage: {fileID: 2800000, guid: 7f81afd0e0eadb740b55f2d3ae54c934, type: 3}
