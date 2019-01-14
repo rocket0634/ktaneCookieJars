@@ -305,70 +305,68 @@ public class cookieJarsScript : MonoBehaviour {
         {
             correctBtns[i] = false;
 
-            if (cookies[i] == 0 && lastEaten != lastLastEaten)
+            if (cookieAmounts[i] > 0)
             {
-                correctBtns[i] = true;
-            }
+                if (cookies[i] == 0 && lastEaten != lastLastEaten)
+                {
+                    correctBtns[i] = true;
+                }
 
-            else if (cookies[i] == 1 && lastEaten == lastLastEaten)
-            {
-                correctBtns[i] = true;
-            }
+                else if (cookies[i] == 1 && lastEaten == lastLastEaten)
+                {
+                    correctBtns[i] = true;
+                }
 
-            else if (cookies[i] == 2 && lastEaten < lastLastEaten)
-            {
-                correctBtns[i] = true;
-            }
+                else if (cookies[i] == 2 && lastEaten < lastLastEaten)
+                {
+                    correctBtns[i] = true;
+                }
 
-            else if (cookies[i] == 3 && lastEaten > lastLastEaten)
-            {
-                correctBtns[i] = true;
-            }
+                else if (cookies[i] == 3 && lastEaten > lastLastEaten)
+                {
+                    correctBtns[i] = true;
+                }
 
-            else if (cookies[i] == 4 && lastEaten == 4)
-            {
-                correctBtns[i] = true;
-            }
+                else if (cookies[i] == 4 && lastEaten == 4)
+                {
+                    correctBtns[i] = true;
+                }
 
-            else if (cookies[i] == 5 && lastEaten != 5)
-            {
-                correctBtns[i] = true;
-            }
+                else if (cookies[i] == 5 && lastEaten != 5)
+                {
+                    correctBtns[i] = true;
+                }
 
-            else if (cookies[i] == 6 && lastEaten % 2 == Info.GetSolvedModuleNames().Count() % 2)
-            {
-                correctBtns[i] = true;
-            }
+                else if (cookies[i] == 6 && lastEaten % 2 == Info.GetSolvedModuleNames().Count() % 2)
+                {
+                    correctBtns[i] = true;
+                }
 
-            else if (cookies[i] == 7 && lastEaten % 2 != Info.GetSolvedModuleNames().Count() % 2)
-            {
-                correctBtns[i] = true;
-            }
+                else if (cookies[i] == 7 && lastEaten % 2 != Info.GetSolvedModuleNames().Count() % 2)
+                {
+                    correctBtns[i] = true;
+                }
 
-            else if (cookies[i] == 8 && cookieAmounts[i] % 2 == Info.GetSolvedModuleNames().Count() % 2)
-            {
-                correctBtns[i] = true;
-            }
+                else if (cookies[i] == 8 && cookieAmounts[i] % 2 == Info.GetSolvedModuleNames().Count() % 2)
+                {
+                    correctBtns[i] = true;
+                }
 
-            else if (cookies[i] == 9 && cookieAmounts[i] % 2 != Info.GetSolvedModuleNames().Count() % 2)
-            {
-                correctBtns[i] = true;
-            }
-
-            if (cookieAmounts[i] == 0)
-            {
-                correctBtns[i] = false;
+                else if (cookies[i] == 9 && cookieAmounts[i] % 2 != Info.GetSolvedModuleNames().Count() % 2)
+                {
+                    correctBtns[i] = true;
+                }
             }
         }
 
         if (!correctBtns.Contains(true))
         {
-            if (cookieAmounts[highestCookie] != 0)
+            if (cookieAmounts[highestCookie] > 0)
             {
                 correctBtns[highestCookie] = true;
             }
 
-            else if (cookieAmounts[secondHighestCookie] != 0)
+            else if (cookieAmounts[secondHighestCookie] > 0)
             {
                 correctBtns[secondHighestCookie] = true;
             }
@@ -378,8 +376,13 @@ public class cookieJarsScript : MonoBehaviour {
                 correctBtns[lowestCookie] = true;
             }
         }
-    }
 
+        for (int i = 0; i < 3; i++)
+        {
+            DebugMsg("Can " + cookieNames[cookies[i]] + " be eaten? " + correctBtns[i]);
+        }
+    }
+        
     private void Update()
     {
         if (Info.GetSolvedModuleNames().Count > solves && !solved)
@@ -500,5 +503,92 @@ public class cookieJarsScript : MonoBehaviour {
         {
             yield break;
         }
+    }
+
+    void ForceCookies(int cookie1, int cookie2, int cookie3)
+    {
+        cookies[0] = cookie1;
+        cookies[1] = cookie2;
+        cookies[2] = cookie3;
+
+        for (int i = 0; i < cookies.Length; i++)
+        {
+            if (cookies[i] > cookies[(i + 1) % cookies.Length] && cookies[i] > cookies[(i + 2) % cookies.Length])
+            {
+                highestCookie = i;
+            }
+
+            else if (cookies[i] > cookies[(i + 1) % cookies.Length] || cookies[i] > cookies[(i + 2) % cookies.Length])
+            {
+                secondHighestCookie = i;
+            }
+
+            else
+            {
+                lowestCookie = i;
+            }
+        }
+
+        float averageCookies = Info.GetSolvableModuleNames().Count / 10f;
+        int slightlyLessAccurateAverageCookies = Info.GetSolvableModuleNames().Count / 10;
+
+        if (slightlyLessAccurateAverageCookies - averageCookies < .3f)
+        {
+            cookieAmounts[0] = slightlyLessAccurateAverageCookies;
+            cookieAmounts[1] = slightlyLessAccurateAverageCookies;
+            cookieAmounts[2] = slightlyLessAccurateAverageCookies;
+        }
+
+        else if (slightlyLessAccurateAverageCookies - averageCookies < .6f)
+        {
+            cookieAmounts[0] = slightlyLessAccurateAverageCookies + 1;
+            cookieAmounts[1] = slightlyLessAccurateAverageCookies;
+            cookieAmounts[2] = slightlyLessAccurateAverageCookies;
+        }
+
+        else
+        {
+            cookieAmounts[0] = slightlyLessAccurateAverageCookies + 1;
+            cookieAmounts[1] = slightlyLessAccurateAverageCookies + 1;
+            cookieAmounts[2] = slightlyLessAccurateAverageCookies;
+        }
+
+        // *starts 967 module bomb*
+        // *gets 290 cookies* 
+        // *https://i.kym-cdn.com/entries/icons/original/000/027/475/Screen_Shot_2018-10-25_at_11.02.15_AM.png*
+
+        if (cookieAmounts[2] == 0)
+        {
+            cookieAmounts[0] = 1;
+            cookieAmounts[1] = 1;
+            cookieAmounts[2] = 1;
+        }
+
+        jarText.text = cookieNames[cookies[shownJar]];
+
+        if (cookieAmounts[shownJar] == 0)
+        {
+            cookieAmountText.text = "[ No cookies! :( ]";
+        }
+
+        else if (cookieAmounts[shownJar] == 1)
+        {
+            cookieAmountText.text = "[ 1 cookie! :| ]";
+        }
+
+        else
+        {
+            cookieAmountText.text = "[ " + cookieAmounts[shownJar] + " cookies! :) ]";
+        }
+
+        lastEaten = Info.GetSerialNumberNumbers().First();
+        lastLastEaten = Info.GetSerialNumberNumbers().Skip(1).First();
+
+        for (int i = 0; i < 3; i++)
+        {
+            DebugMsg("One of the jars has " + cookieAmounts[i] + " " + cookieNames[cookies[i]].Replace("\n", " ") + " inside.");
+        }
+
+        DebugMsg("The last eaten cookie was a " + debugCookies[lastEaten] + " cookie and the cookie eaten before that was a " + debugCookies[lastLastEaten] + " cookie.");
     }
 }
