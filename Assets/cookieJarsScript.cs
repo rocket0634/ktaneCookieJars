@@ -214,23 +214,31 @@ public class cookieJarsScript : MonoBehaviour {
             }
 
             cookies[i] = rndCookie;
+        }
 
-            if (cookies[i] < cookies[(i + 1) % cookies.Length] && cookies[i] < cookies[(i + 2) % cookies.Length])
+        for (int i = 0; i < cookies.Length; i++)
+        {
+            if (cookies[i] < cookies[(i + 1) % 3] && cookies[i] < cookies[(i + 2) % 3])
             {
                 highestCookie = i;
+                DebugMsg("The " + cookieNames[cookies[i]] + " are the highest on the list.");
             }
 
-            else if (cookies[i] < cookies[(i + 1) % cookies.Length] || cookies[i] < cookies[(i + 2) % cookies.Length])
+            else if (cookies[i] < cookies[(i + 1) % 3] || cookies[i] < cookies[(i + 2) % 3])
             {
                 secondHighestCookie = i;
+                DebugMsg("The " + cookieNames[cookies[i]] + " are the second highest on the list.");
             }
 
             else
             {
                 lowestCookie = i;
+                DebugMsg("The " + cookieNames[cookies[i]] + " are the lowest on the list.");
             }
         }
-        
+
+        Debug.LogFormat(string.Join(",", cookies.Select(x => x.ToString()).ToArray()));
+
         float averageCookies = Info.GetSolvableModuleNames().Count / 10f;
         int slightlyLessAccurateAverageCookies = Info.GetSolvableModuleNames().Count / 10;
 
