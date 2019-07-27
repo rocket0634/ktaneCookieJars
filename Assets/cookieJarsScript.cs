@@ -87,27 +87,13 @@ public class cookieJarsScript : MonoBehaviour {
 
     void EatCookie()
     {
-        int solvedModules = 0, solvableModules = 0;
-
-        foreach (var module in Info.GetSolvedModuleNames())
-        {
-            if (!ignoredModules.Contains(module))
-            {
-                solvedModules++;
-            }
-        }
-
-        foreach (var module in Info.GetSolvableModuleNames())
-        {
-            if (!ignoredModules.Contains(module))
-            {
-                solvableModules++;
-            }
-        }
+        var allSolved = Info.GetSolvedModuleNames();
+        var solvedModules = allSolved.Except(ignoredModules).Count();
+        var solvableModules = Info.GetSolvableModuleNames().Except(ignoredModules).Count();
 
         if ((solvedModules == solvableModules || hunger != 0) && cookieAmounts[shownJar] > 0)
         {
-            CheckCookies();
+            CheckCookies(allSolved.Count);
 
             if (correctBtns[shownJar])
             {
@@ -307,7 +293,7 @@ public class cookieJarsScript : MonoBehaviour {
         Debug.LogFormat("[Cookie Jars #{0}] {1}", _moduleId, msg.Replace("\n", " "));
     }
 
-    void CheckCookies()
+    void CheckCookies(int numSolved)
     {
         for (int i = 0; i < 3; i++)
         {
@@ -345,22 +331,22 @@ public class cookieJarsScript : MonoBehaviour {
                     correctBtns[i] = true;
                 }
 
-                else if (cookies[i] == 6 && lastEaten % 2 == Info.GetSolvedModuleNames().Count() % 2)
+                else if (cookies[i] == 6 && lastEaten % 2 == numSolved % 2)
                 {
                     correctBtns[i] = true;
                 }
 
-                else if (cookies[i] == 7 && lastEaten % 2 != Info.GetSolvedModuleNames().Count() % 2)
+                else if (cookies[i] == 7 && lastEaten % 2 != numSolved % 2)
                 {
                     correctBtns[i] = true;
                 }
 
-                else if (cookies[i] == 8 && cookieAmounts[i] % 2 == Info.GetSolvedModuleNames().Count() % 2)
+                else if (cookies[i] == 8 && cookieAmounts[i] % 2 == numSolved % 2)
                 {
                     correctBtns[i] = true;
                 }
 
-                else if (cookies[i] == 9 && cookieAmounts[i] % 2 != Info.GetSolvedModuleNames().Count() % 2)
+                else if (cookies[i] == 9 && cookieAmounts[i] % 2 != numSolved % 2)
                 {
                     correctBtns[i] = true;
                 }
@@ -390,7 +376,7 @@ public class cookieJarsScript : MonoBehaviour {
             DebugMsg("Can " + cookieNames[cookies[i]] + " be eaten? " + correctBtns[i]);
         }
     }
-        
+
     private void Update()
     {
         if (Info.GetSolvedModuleNames().Count > solves && !solved)
@@ -458,7 +444,7 @@ public class cookieJarsScript : MonoBehaviour {
 
             yield return new WaitForSeconds(.05f);
         }
-       
+
     }
 
     IEnumerator Spin(int spinDirection)
