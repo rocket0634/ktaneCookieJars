@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using KModkit;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 public class cookieJarsScript : MonoBehaviour {
 
@@ -461,9 +462,43 @@ public class cookieJarsScript : MonoBehaviour {
         }
     }
 
-    public string TwitchHelpMessage = "!{0} cycle will cycle through the jars. !{0} eat will eat a cookie from the jar. !{0} left/!{0} right move to the left/right jars respectively.";
+    //twitch plays
+    #pragma warning restore 414
+    private readonly string TwitchHelpMessage = @"!{0} cycle will cycle through the jars. !{0} eat will eat a cookie from the jar. !{0} left/!{0} right move to the left/right jars respectively.";
+    #pragma warning restore 414
     IEnumerator ProcessTwitchCommand(string cmd)
     {
+        if (Regex.IsMatch(cmd, @"^\s*cycle\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
+        {
+            yield return null;
+            right.OnInteract();
+            yield return new WaitForSeconds(2.5f);
+            right.OnInteract();
+            yield return new WaitForSeconds(2.5f);
+            right.OnInteract();
+            yield return new WaitForSeconds(1.0f);
+            yield break;
+        }
+        if (Regex.IsMatch(cmd, @"^\s*eat\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
+        {
+            yield return null;
+            jar.OnInteract();
+            yield break;
+        }
+        if (Regex.IsMatch(cmd, @"^\s*left\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
+        {
+            yield return null;
+            left.OnInteract();
+            yield break;
+        }
+        if (Regex.IsMatch(cmd, @"^\s*right\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
+        {
+            yield return null;
+            right.OnInteract();
+            yield break;
+        }
+
+        /** old tp code
         if (cmd.ToLowerInvariant() == "cycle")
         {
             yield return null;
@@ -496,7 +531,21 @@ public class cookieJarsScript : MonoBehaviour {
         else
         {
             yield break;
-        }
+        }*/
+    }
+
+    IEnumerator TwitchHandleForcedSolve()
+    {
+        yield return null;
+        jarText.text = "GG!";
+        cookieAmountText.text = "[ No cookies!!! D: ]";
+
+        leds[0].material = lit;
+        leds[1].material = lit;
+        leds[2].material = lit;
+        leds[3].material = lit;
+        leds[4].material = lit;
+        solved = true;
     }
 
     void ForceCookies(int cookie1, int cookie2, int cookie3)
