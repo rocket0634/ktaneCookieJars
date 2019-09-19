@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 public class cookieJarsScript : MonoBehaviour {
 
     public KMBombModule Module;
+    public KMBossModule Boss;
     public KMAudio Audio;
     public KMBombInfo Info;
     public KMSelectable jar, left, right;
@@ -33,7 +34,8 @@ public class cookieJarsScript : MonoBehaviour {
     private int highestCookie = 0, secondHighestCookie = 0, lowestCookie;
 
     int solves = 0;
-    private readonly string[] ignoredModules = { "Forget Me Not", "Forget Everything", "Souvenir", "The Time Keeper", "Turn the Key", "The Swan", "Simon's Stages", "Cookie Jars" };
+    private readonly string[] ignoredModulesList = { "Forget Me Not", "Forget Everything", "Souvenir", "The Time Keeper", "Turn the Key", "The Swan", "Simon's Stages", "Cookie Jars" };
+    private string[] ignoredModules { get { return Boss.GetIgnoredModules(Module, ignoredModulesList); } }
     
     void Start () {
         _moduleId = _moduleIdCounter++;
